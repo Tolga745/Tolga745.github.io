@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/mock/auth";
 import axios from "axios";
-import { ObjectId } from "mongodb";
+import type { ObjectId } from "mongodb";
 import OrderList from "./orderList";
 import OrderDetails from "./orderDetails";
 import OrderSkeleton from "./orderSkeleton";

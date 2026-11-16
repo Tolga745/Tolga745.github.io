@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useRef } from 'react';
-import { signIn, useSession, getSession } from 'next-auth/react';
+import { signIn, useSession, getSession } from '@/mock/auth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect } from 'react';

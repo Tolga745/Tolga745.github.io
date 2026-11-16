@@ -1,9 +1,10 @@
 "use client";
 
+import { imageUrl } from '@/lib/image-url';
 import TopBar from '../../../../components/StaticTopBar';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/mock/auth';
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import Link from 'next/link';
@@ -253,7 +254,7 @@ const ShoppingPage = () => {
 
         <Link href={`/product/${product._id}`} className="cursor-pointer">
           <Image
-            src={`/api/images/${product.imageId}`}
+            src={imageUrl(product.imageId)}
             alt={product.name}
             width={300}
             height={300}

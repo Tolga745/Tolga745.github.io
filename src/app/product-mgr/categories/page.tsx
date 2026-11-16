@@ -1,4 +1,5 @@
 'use client'
+import { imageUrl } from '@/lib/image-url';
 import React, { useState, useEffect } from "react";
 
 interface Category {
@@ -96,7 +97,7 @@ const CategoryManagement: React.FC = () => {
           className="p-3 bg-gray-50 border border-gray-200 rounded-md flex flex-col items-center justify-center"
         >
           <img
-            src={`/api/images/${category.image}`}
+            src={imageUrl(category.image)}
             alt={category.name}
             className="w-16 h-16 object-cover rounded-full mb-2"
           />

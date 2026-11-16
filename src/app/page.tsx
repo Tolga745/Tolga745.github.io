@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react'; // Import useSession from next-auth
+import { useSession } from '@/mock/auth'; // mock session (static demo)
 import TopBar from '../components/TopBar';
 import StaticTopBar from '@/components/StaticTopBar';
 import { Libre_Baskerville } from 'next/font/google'; // Import Libre Baskerville

@@ -6,7 +6,7 @@ import AccountSettings from "./account/page";
 import UserSidebar from "@/components/UserSidebar";
 import { User } from "@/types/user";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/mock/auth";
 import UserOrders from "./order/page";
 
 interface MainContentProps {

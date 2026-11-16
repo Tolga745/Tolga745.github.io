@@ -2,7 +2,12 @@
 
 import './fonts/global.css'; // Adjust path if needed
 
-import { SessionProvider } from "next-auth/react";
+// Static demo: all /api/* calls are answered in the browser from a localStorage mock database.
+import '@/mock/install';
+
+import { Suspense } from 'react';
+import { SessionProvider } from '@/mock/auth';
+import RouteGuard from '@/components/RouteGuard';
 
 export default function RootLayout({
   children,
@@ -12,8 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* Wrap your app with SessionProvider for auth context */}
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <Suspense fallback={null}>
+            <RouteGuard>{children}</RouteGuard>
+          </Suspense>
+        </SessionProvider>
       </body>
     </html>
   );

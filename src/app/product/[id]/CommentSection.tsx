@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/mock/auth';
 import StarRating from './StarRating';
 
 interface Comment {

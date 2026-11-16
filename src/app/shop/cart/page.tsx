@@ -2,9 +2,10 @@
 
 "use client";
 
+import { imageUrl } from '@/lib/image-url';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/mock/auth';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { CartItem } from '@/types/cart';
@@ -229,7 +230,7 @@ const ShoppingCartPage = () => {
                           >
                             <div className="flex items-center space-x-4">
                               <Image
-                                  src={`/api/images/${item.imageId}`}
+                                  src={imageUrl(item.imageId)}
                                   alt={item.name}
                                   width={300}
                                   height={300}

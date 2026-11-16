@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/mock/auth';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { CartItem } from '@/types/cart';
-import {Order} from '@/models/order.model';
 
 interface PaymentFormData {
   address: string;

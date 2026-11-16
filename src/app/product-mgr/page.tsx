@@ -1,6 +1,6 @@
 'use client'
 
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/mock/auth';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';

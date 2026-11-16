@@ -1,3 +1,4 @@
+import { imageUrl } from '@/lib/image-url';
 import React from "react";
 import { Order } from "@/types/order";
 import { Product } from "@/types/product";
@@ -75,7 +76,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, orderedProducts }) =
               onClick = {() => router.push(`/product/${productId}`)}
             >
               <Image
-                src={`/api/images/${product?.imageId}`}
+                src={imageUrl(product?.imageId)}
                 alt={product?.name}
                 width={96}
                 height={96}

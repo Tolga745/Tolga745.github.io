@@ -1,4 +1,5 @@
 // File: ProductItem.tsx
+import { imageUrl } from '@/lib/image-url';
 import React, { useState, useRef, useEffect } from 'react';
 import { Product } from '@/types/product';
 import Image from 'next/image';
@@ -6,7 +7,7 @@ import { Button } from 'primereact/button';
 import styles from '../../../styles/ProductItem.module.css';
 import CommentSection from './CommentSection';
 import { Toast } from 'primereact/toast';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/mock/auth';
 import axios from 'axios';
 import colorMap from "@/types/ColorMap";
 import { Heart, HeartFill } from 'react-bootstrap-icons';
@@ -159,7 +160,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
             <div className={styles.productContainer}>
                 <div className={styles.imageSection}>
                     <Image
-                        src={`/api/images/${product.imageId}`}
+                        src={imageUrl(product.imageId)}
                         alt={product.name}
                         width={300}
                         height={300}

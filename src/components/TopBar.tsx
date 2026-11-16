@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useSession, signOut } from 'next-auth/react'; // Import next-auth
+import { useSession, signOut } from '@/mock/auth'; // mock session (static demo)
 
 interface TopBarProps {
   scrollPosition: number;

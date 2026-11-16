@@ -1,50 +1,48 @@
 # best-308
 
-A base for boutique fashion market websites with ease of deployment
+A base for boutique fashion market websites with ease of deployment.
 
-## Setup and Running
+This branch is a **static demo** of the store, published with GitHub Pages. It has no server
+and no database:
 
-1. **Install dependencies**:
+- Every `/api/...` call made by the pages is answered in the browser by a fake backend in
+  [`src/mock`](src/mock). It keeps its data in the browser's `localStorage` and starts from the
+  seed data in [`src/mock/db.ts`](src/mock/db.ts).
+- Sign-in is also faked ([`src/mock/auth.tsx`](src/mock/auth.tsx)). The old `middleware.ts`
+  access rules are enforced client-side by [`RouteGuard`](src/components/RouteGuard.tsx).
+- No emails are sent. Password-reset links are written to the browser console instead.
+- Each browser has its own copy of the data. To reset it, clear the site's local storage or
+  run `window.__resetMockDb()` in the console.
 
-   ```bash
-   npm install
-   ```
+## Demo accounts
 
-2. **Database Management**:
+All accounts use the password `Password123!`.
 
-   We switched to MongoAtlas so you can check the database from the site:
-   https://cloud.mongodb.com/v2/6744638557a77e6a1612f338#/overview
+| Email               | Role            |
+| ------------------- | --------------- |
+| semih@example.com   | customer        |
+| eren@example.com    | customer        |
+| ege@example.com     | product_manager |
+| burak@example.com   | product_manager |
+| pome@example.com    | sales_manager   |
+| tolga@example.com   | admin           |
 
-   To access mongosh aka mongo shell enter this command in the command line
+## Running locally
 
-  sudo docker exec -it mongodb mongosh "mongodb+srv://cluster0.rz8bd.mongodb.net/" --apiVersion 1 --username root
+```bash
+npm install
+npm run dev          # http://localhost:3000
+```
 
-  The password is rpassword
+To build the static site exactly as GitHub Pages serves it:
 
-4. **Run the development server**:
+```bash
+npx next build       # writes the site to out/
+python -m http.server 4173 --directory out
+```
 
-   ```bash
-   npm run dev
-   ```
+## Deployment
 
-6. **Access the application**:
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Accessing MongoDB Express
-
-- URL: [http://localhost:8081](http://localhost:8081)
-- Username: admin
-- Password: pass
-
-## Shutting Down
-
-1. Stop the Next.js development server: `Ctrl+C`
-2. Stop MongoDB and MongoDB Express:
-
-   ```bash
-   ./scripts/stop_db.sh
-   ```
-
-## Development
-
-Edit `app/page.tsx` to modify the main page. The page auto-updates as you edit.
+[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) builds the site and
+deploys `out/` to GitHub Pages on every push to `dev`. It can also be run by hand from the
+Actions tab. In the repository settings, **Pages → Source** must be set to **GitHub Actions**.

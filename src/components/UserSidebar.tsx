@@ -1,4 +1,4 @@
-import { signOut } from 'next-auth/react';
+import { signOut } from '@/mock/auth';
 import React, { useState } from 'react';
 
 interface SidebarProps {
