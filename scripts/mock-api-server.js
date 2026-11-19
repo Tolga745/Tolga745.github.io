@@ -93,6 +93,16 @@ async function handler(req, res) {
       });
     }
 
+    if (req.method === 'DELETE' && url.pathname.startsWith('/api/users/')) {
+      const userId = decodeURIComponent(url.pathname.slice('/api/users/'.length));
+      if (!userId) return sendJson(res, 400, { message: 'User ID is required' });
+      if (!users.has(userId)) return sendJson(res, 404, { message: 'User not found' });
+
+      users.delete(userId);
+      carts.delete(userId);
+      return sendJson(res, 200, { message: 'User deleted successfully', userId });
+    }
+
     if (req.method === 'GET' && url.pathname === '/api/product') {
       return sendJson(res, 200, [product]);
     }
