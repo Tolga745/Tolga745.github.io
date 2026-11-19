@@ -51,7 +51,12 @@ const InvoicesPage = () => {
       const response = await axios.get(`/api/invoice/${invoiceId}/download`, {
         responseType: "blob",
       });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const invoiceBlob = response.data instanceof Blob
+        ? response.data
+        : new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(invoiceBlob.type === "application/pdf"
+        ? invoiceBlob
+        : new Blob([invoiceBlob], { type: "application/pdf" }));
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", `invoice-${invoiceNumber}.pdf`);

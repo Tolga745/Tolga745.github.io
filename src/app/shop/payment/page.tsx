@@ -128,7 +128,13 @@ const PaymentPage = () => {
       }, { responseType: 'blob' });
 
       // Create URL for invoice preview
-      const invoiceUrl = URL.createObjectURL(new Blob([invoiceResponse.data]));
+      const invoiceData = invoiceResponse.data instanceof Blob
+        ? invoiceResponse.data
+        : new Blob([invoiceResponse.data], { type: 'application/pdf' });
+      const invoiceBlob = invoiceData.type === 'application/pdf'
+        ? invoiceData
+        : new Blob([await invoiceData.arrayBuffer()], { type: 'application/pdf' });
+      const invoiceUrl = URL.createObjectURL(invoiceBlob);
 
       const totalPrice = cartItems.reduce((sum, item) => {
         const salePrice = parseFloat(item.salePrice); // Ensure salePrice is a number

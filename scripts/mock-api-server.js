@@ -1,4 +1,6 @@
 const http = require('http');
+const { jsPDF } = require('jspdf');
+require('jspdf-autotable');
 
 const PORT = Number(process.env.MOCK_API_PORT || 3001);
 const users = new Map();
@@ -29,6 +31,47 @@ function sendJson(res, status, body) {
     'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
   });
   res.end(JSON.stringify(body));
+}
+
+function sendPdf(res, status, pdf, invoiceNumber) {
+  res.writeHead(status, {
+    'Content-Type': 'application/pdf',
+    'Content-Disposition': `attachment; filename="invoice-${invoiceNumber}.pdf"`,
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+  });
+  res.end(Buffer.from(pdf.output('arraybuffer')));
+}
+
+function generateInvoicePdf(invoice) {
+  const doc = new jsPDF();
+  doc.setFontSize(20);
+  doc.text('BEST 308 E-COMMERCE', 105, 20, { align: 'center' });
+  doc.setFontSize(16);
+  doc.text('INVOICE', 105, 30, { align: 'center' });
+  doc.setFontSize(12);
+  doc.text(`Invoice Number: ${invoice.invoiceNumber}`, 20, 50);
+  doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 60);
+  doc.text('Bill To:', 20, 80);
+  doc.text(String(invoice.customerDetails.name || ''), 20, 90);
+  doc.text(String(invoice.customerDetails.email || ''), 20, 100);
+  doc.text(String(invoice.customerDetails.address || ''), 20, 110);
+  doc.autoTable({
+    startY: 120,
+    head: [['Product', 'Size', 'Color', 'Qty', 'Price', 'Total']],
+    body: invoice.items.map((item) => [
+      item.name,
+      item.size,
+      item.color,
+      String(item.quantity),
+      `$${Number(item.salePrice).toFixed(2)}`,
+      `$${(Number(item.salePrice) * Number(item.quantity)).toFixed(2)}`,
+    ]),
+  });
+  const finalY = doc.lastAutoTable?.finalY || 140;
+  doc.text(`Total Amount: $${Number(invoice.totalAmount).toFixed(2)}`, 150, finalY + 20);
+  return doc;
 }
 
 function readJson(req) {
@@ -151,12 +194,13 @@ async function handler(req, res) {
       if (!body.customerDetails?.email) {
         return sendJson(res, 400, { message: 'customerDetails.email is required' });
       }
-      return sendJson(res, 200, {
+      const invoice = {
         invoiceNumber: `INV-BRUNO-${String(orders.length + 1).padStart(4, '0')}`,
         items: body.items,
         totalAmount: body.totalAmount,
         customerDetails: body.customerDetails,
-      });
+      };
+      return sendPdf(res, 200, generateInvoicePdf(invoice), invoice.invoiceNumber);
     }
 
     if (req.method === 'POST' && url.pathname === '/api/order') {
