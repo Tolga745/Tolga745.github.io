@@ -66,6 +66,7 @@ const ShoppingCartPage = () => {
         const response = await axios.post('/api/cart/view-cart', { userId, localCart });
         setCartItems(response.data.cart);
         calculateTotalPrice(response.data.cart);
+        localStorage.removeItem('cart');
       
       } catch (error) {
         console.error('Error fetching cart items:', error);
@@ -132,7 +133,7 @@ const ShoppingCartPage = () => {
   
       const updatedCart = localCart
         .map((item: any) => {
-          if (item._id === productId && item.size === size && item.color === color) {
+          if ((item._id || item.productId) === productId && item.size === size && item.color === color) {
             const updatedQuantity = Math.max(item.quantity + change, 0); // Prevent negative quantity
             return { ...item, quantity: updatedQuantity };
           }

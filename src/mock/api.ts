@@ -237,8 +237,49 @@ const postViewCart: Handler = ({ body }) => {
   if (!userId) return json({ cart: localCart, totalPrice: total(localCart) });
 
   const db = getDb();
-  const cart = db.shoppingCart.find((c) => c.userId === userId);
-  if (!cart) return json({ cart: [], totalPrice: 0 });
+  let cart = db.shoppingCart.find((c) => c.userId === userId);
+  if (!cart) {
+    cart = { _id: newId(), userId, items: [] };
+    db.shoppingCart.push(cart);
+  }
+
+  for (const local of localCart || []) {
+    const product = findById(db.product, local.productId);
+    if (!product) continue;
+
+    let pp = db.processedProduct.find((x) =>
+      x.productId === local.productId && x.size === local.size && x.color === local.color,
+    );
+    if (!pp) {
+      pp = {
+        _id: newId(),
+        productId: local.productId,
+        name: product.name,
+        imageId: product.imageId,
+        salePrice: product.salePrice,
+        size: local.size,
+        color: local.color,
+        quantity: 1,
+        stockAvailable: product.available_stock?.[local.size] ?? 0,
+        createdAt: nowIso(),
+        updatedAt: nowIso(),
+      };
+      db.processedProduct.push(pp);
+    }
+
+    const existing = cart.items.find((i: Doc) =>
+      i.processedProductId === pp!._id && i.size === local.size && i.color === local.color,
+    );
+    if (existing) existing.quantity += Number(local.quantity || 1);
+    else cart.items.push({
+      processedProductId: pp._id,
+      size: local.size,
+      color: local.color,
+      quantity: Number(local.quantity || 1),
+    });
+  }
+  saveDb();
+
   const items = cart.items
     .map((i: Doc) => {
       const pp = findById(db.processedProduct, i.processedProductId);
